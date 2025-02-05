@@ -27,7 +27,8 @@ model User {
   role         Role     @default(CUSTOMER)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  Point        Point?
+  point        Point?
+  events       Event[]
 
   @@index([email])
   @@map("users")
@@ -41,4 +42,28 @@ model Point {
   user      User?    @relation(fields: [userId], references: [id])
 
   @@map("points")
+}
+
+enum TicketType {
+  FREE
+  PAID
+}
+
+model Event {
+  id          String     @id @default(cuid())
+  title       String
+  slug        String
+  image       String
+  price       Int
+  description String     @db.LongText
+  startDate   DateTime
+  endDate     DateTime
+  time        String
+  location    String
+  totalTicket Int
+  type        TicketType @default(PAID)
+  userId      String
+  user        User       @relation(fields: [userId], references: [id])
+
+  @@map("events")
 }
